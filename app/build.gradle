@@ -1,0 +1,117 @@
+apply plugin: 'com.android.application'
+apply plugin: 'org.sonarqube'
+apply plugin: 'jacoco-android'
+//apply plugin: 'kotlin-android'
+//
+//apply plugin: 'kotlin-android-extensions'
+
+
+
+
+
+def serverConfigPropertiesFile = rootProject.file("serverConfig.properties")
+
+def serverProperties = new Properties()
+
+serverProperties.load(new FileInputStream(serverConfigPropertiesFile))
+
+android {
+    dataBinding {
+        enabled true
+    }
+
+
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "nytimes.siddarth.com.nytimes"
+        minSdkVersion 15
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    flavorDimensions "Dev"
+
+    productFlavors {
+
+        Dev {
+
+            buildConfigField("String", "BASE_URL",'"http://api.nytimes.com/svc/mostpopular/v2/mostviewed/all-sections/"')
+            minSdkVersion 19
+
+        }
+
+        packagingOptions {
+            exclude 'META-INF/DEPENDENCIES'
+            exclude 'META-INF/NOTICE'
+            exclude 'META-INF/LICENSE'
+            exclude 'META-INF/LICENSE.txt'
+            exclude 'META-INF/NOTICE.txt'
+        }
+
+    }
+}
+
+repositories {
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-jackson:2.4.0'
+    implementation 'com.squareup.picasso:picasso:2.6.0-SNAPSHOT'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
+    implementation 'android.arch.persistence.room:runtime:1.1.1'
+    implementation 'com.google.dagger:dagger:2.13'
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'jp.wasabeef:picasso-transformations:2.1.2'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.13'
+    annotationProcessor "android.arch.persistence.room:compiler:1.1.1"
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
+    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
+    testImplementation 'org.mockito:mockito-core:2.7.22'
+    androidTestImplementation 'org.mockito:mockito-android:2.7.22'
+    androidTestImplementation 'com.squareup.okhttp3:mockwebserver:3.10.0'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation('com.android.support.test.espresso:espresso-contrib:2.0') {
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude module: 'recyclerview-v7'
+    }
+}
+
+sonarqube {
+
+
+    properties {
+        def libraries = project.android.sdkDirectory.getPath() + "/platforms/android-28/android.jar"
+/* + ", build/intermediates/exploded-aar*//**//*classes.jar"*/
+        property "sonar.sources", "src/main/java"
+        property "sonar.binaries", "build/intermediates/classes/debug"
+        property "sonar.libraries", libraries
+        property "sonar.tests", "src/test/java, src/androidTest/java"
+        property "sonar.java.test.binaries", "build/intermediates/class/debug"
+        property "sonar.java.test.libraries", libraries
+        property "sonar.jacoco.reportPath", "build/jacoco/testDebugUnitTest.exec"
+        property "sonar.java.coveragePlugin", "jacoco"
+        property "sonar.junit.reportsPath", "build/test-results/debug"
+        property "sonar.android.lint.report", "build/outputs/lint-results"
+    }
+}

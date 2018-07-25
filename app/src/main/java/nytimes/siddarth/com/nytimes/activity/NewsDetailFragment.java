@@ -40,12 +40,13 @@ public class NewsDetailFragment extends Fragment {
             CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
                 appBarLayout.setTitle(data.getTitle());
-            }
-
-            ImageView imageView = appBarLayout.findViewById(R.id.image);
+                ImageView imageView = appBarLayout.findViewById(R.id.image);
 
             Picasso.with(getActivity()).load(data.getMedia().get(0).getMediaMetaData().get(0).getUrl())
                     .into(imageView);
+            }
+
+            
 
 
 

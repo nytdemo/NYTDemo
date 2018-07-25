@@ -19,3 +19,5 @@ New York Times API call for most viewed articles (Android, MVVM, Retrofit)
 #Picasso for image handling
 
 #To run tests press (Ctrl + Shift + F10)
+
+![sonarqube image] (https://github.com/nytdemo/NYTDemo/blob/master/sonarqube.png)
